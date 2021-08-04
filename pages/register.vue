@@ -6,7 +6,6 @@
     <div class="register">
       <div class="register-content">
         <h2>新規登録</h2>
-        <form @submit.prevent="register">
           <validation-provider v-slot="{ errors }" rules="required|max:20">
             <input v-model="name" id="name" class="txt" type="name" placeholder="ユーザーネーム"/>
             <div class="error">{{ errors[0] }}</div>
@@ -22,15 +21,18 @@
             <div class="error">{{ errors[0] }}</div>
           </validation-provider>
           <br />
-          <button type="submit" class="register-btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">新規登録</button>
-        </form>
+          <button @click="register" class="register-btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">新規登録</button>
       </div>
     </div>
   </validation-observer>
 </template>
 <script>
+import Header from "@/components/header.vue";
 import firebase from '~/plugins/firebase'
 export default {
+  components: {
+			Header
+  },
   data() {
     return {
       email: null,
@@ -38,12 +40,13 @@ export default {
       name: null,
     }
   },
-  method: {
+  methods: {
     register() {
       firebase
       .auth()
       .createUserWithEmailAndPassword(this.email, this.password)
       .then((date)=>{
+        console.log(date);
       date.user.updateProfile({
         displayName: this.name
       })

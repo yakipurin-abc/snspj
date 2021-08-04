@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="header-left">
-      <img src="../../img/logo.png">
+      <img src="~/assets/logo.png">
     </div>
     <div class="header-right">
       <NuxtLink to="/register" class="register link">新規登録</NuxtLink>
