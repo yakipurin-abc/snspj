@@ -1,7 +1,7 @@
 <template>
   <div class="contents">
     <div class="contents-img">
-      <img src="../../img/logo.png" >
+      <img src="~/assets/logo.png">
     </div>
     <div class="contents-message">
       <h2>SHAREへようこそ!
