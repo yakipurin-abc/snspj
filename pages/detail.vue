@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-		<div class="side-list">
+<div class="detail">
+  <div class="side-list">
 			<div class="contents-list">
     		<div class="logo">
       		<img src="~/assets/logo.png">
@@ -22,27 +22,26 @@
           	<p>シェア</p>
           	<validation-provider v-slot="{ errors }" rules="required">
             	<textarea name="message" id="message" v-model="message" cols="30" rows="10" class="message-box" required></textarea>
-            	<div class="error">{{ errors[0] }}</div>
-            	<button @click="insertMessage" type="submit" class="btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">シェアする</button>
+              <div class="error">{{ errors[0] }}</div>
+            <button @click="insertMessage" type="submit" class="btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">シェアする</button>
           	</validation-provider>
         	</div>
       	</validation-observer>
   		</div>
-		</div>
-		<div class="contents">
-			<h2 class="contents-ttl">ホーム</h2>
-			<div class="contents-item" v-for="item in contents" :key="item.id">
-				<div class="top-line">
-					<p>{{item.user}}</p>
-					<img  src="~/assets/heart.png">
-					<p>{{count}}</p>
-					<img  src="~/assets/cross.png">
-					<img  src="~/assets/detail.png">
-				</div>
-				<p>{{content.message}}</p>
-		</div>
-  </div>
 	</div>
+
+  <div class="comment">
+    <div class="comment-ttl">
+      <p>コメント</p>
+    </div>
+    <div class="comment-list">
+
+    </div>
+
+
+  </div>
+</div>
+  
 </template>
 <script>
 import firebase from '~/plugins/firebase'
@@ -65,6 +64,9 @@ import firebase from '~/plugins/firebase'
           this.$router.replace('/')
         })
     	},
+			detail(){
+				this.$router.replace('detail')
+			},
 		async insertMessage() {
       const sendData = {
         message: this.message,
@@ -95,43 +97,26 @@ import firebase from '~/plugins/firebase'
 };
 
 </script>
-
 <style scoped>
-.home{
-	background-color: rgb(23, 35, 49);
-	display: flex;
-	color: #fff;
-	width: 100%;
-	height: 100vh;
+.side-list{
+  width: 25%;
+  background-color: rgb(23, 35, 49);
 }
-.contents-list img{
-	width: 2%;
+.comment{
+  width: 100%;
+  background-color: rgb(23, 35, 49);
 }
-
-.contents{
-	margin-left: 3%;
-	width: 100%;
-	height: 100%;
+.detail{
+  color: #fff;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
 }
-.contents-ttl{
-	padding: 10px;
-	border-bottom: solid 2px #fff;
-	border-left: solid 2px #fff;
-	width: 100%;
-	margin-top: 0;
-	margin-bottom: 0;
+.contents-list{
+  padding-left: 30px;
 }
 li{
   list-style: none;
-}
-.item{
-	width: 100%;
-}
-table{
-	width: 100%;
-}
-.contents-list{
-  background-color: rgb(23, 35, 49);
 }
 .home-btn{
   text-decoration: none;
@@ -190,11 +175,21 @@ textarea {
 .share p {
   color: #fff;
 }
-.top-line img{
-	width: 20px;
-  margin: 0 8px;
+
+.comment-ttl{
+  border-left: solid 1px #fff;
+  border-bottom: solid 1px #fff;
+  margin-top: 0;
+  margin-bottom: 0;
 }
-.top-line img:nth-child(3){
-	margin-left: 30px;
+.comment-ttl p{
+  margin-top: 0;
+  padding: 10px;
+}
+.comment-list{
+  border-left: solid 1px #fff;
+  border-bottom: solid 1px #fff;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 </style>

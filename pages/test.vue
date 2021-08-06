@@ -3,7 +3,7 @@
     <h1>ホーム</h1>
     <p>{{ message }}</p>
     <p>{{email}}</p>
-
+    <p>{{user}}</p>
     <NuxtLink to="/register">新規登録</NuxtLink>
     <br />
     <NuxtLink to="/login">ログイン</NuxtLink>
@@ -19,7 +19,8 @@ export default {
     return {
       message: 'ログインができておりません',
       email: null,
-      userName:firebase.auth().currentUser.displayName,
+      user: null,
+      contents: [],
     }
   },
   created() {
@@ -32,6 +33,12 @@ export default {
     })
   },
   methods: {
+    async getContact() {
+      const resData = await this.$axios.get(
+        "http://127.0.0.1:8000/api/v1/rest"
+      );
+      this.contactLists = resData.data.data;
+    },
     logout() {
       firebase
         .auth()
