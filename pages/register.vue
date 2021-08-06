@@ -47,12 +47,29 @@ export default {
       .createUserWithEmailAndPassword(this.email, this.password)
       .then((date)=>{
         console.log(date);
-      date.user.updateProfile({
+        date.user.updateProfile({
         displayName: this.name
       })
     })
-    }
-  },
+    this.$router.push('login')
+    .catch((error) => {
+          switch (error.code) {
+            case 'auth/invalid-email':
+              alert('メールアドレスの形式が違います。')
+              break
+            case 'auth/email-already-in-use':
+              alert('このメールアドレスはすでに使われています。')
+              break
+            case 'auth/weak-password':
+              alert('パスワードは6文字以上で入力してください。')
+              break
+            default:
+              alert('エラーが起きました。しばらくしてから再度お試しください。')
+              break
+          }
+    })
+}
+  }
 }
 </script>
 
