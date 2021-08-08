@@ -8,6 +8,7 @@
     		<nav class="nav">
       		<p>{{user}}</p>
       		<p>{{email}}</p>
+					<p>{{user_id}}</p>
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>
@@ -35,7 +36,7 @@
 				<div class="top-line">
 					<p>{{item.user}}</p>
 					<p>{{item.id}}</p>
-					<img  src="~/assets/heart.png"  @click.prevent="like">
+					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img  src="~/assets/heart.png" >
 					<p>count</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
@@ -58,6 +59,7 @@ import firebase from '~/plugins/firebase'
 				message: null,
 				email: null,
 				status: false,
+				user_id: null,
 			}
 		},
 		methods: {
@@ -94,13 +96,14 @@ import firebase from '~/plugins/firebase'
     			if (user) {
     	  		this.email = user.email
     	  		this.user = user.displayName
+						this.user_id = user.uid
     			}
   			})
 			},
-			async like() {
+			async like(id) {
       	const addLike = {
-        	message_id: item.id,
-        	user_id: '',
+        	message_id: '4',
+        	user_id: '4',
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
