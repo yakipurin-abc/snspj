@@ -34,12 +34,16 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img  src="~/assets/heart.png">
-					<p>{{count}}</p>
-					<img  src="~/assets/cross.png">
-					<img  src="~/assets/detail.png">
+					<p>{{item.id}}</p>
+					<img  src="~/assets/heart.png"  @click.prevent="like">
+					<img  src="~/assets/heart.png" >
+					<p>count</p>
+					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
+					<div  class="contents-dtl">
+						<img src="~/assets/detail.png">
+					</div>
 				</div>
-				<p>{{content.message}}</p>
+				<p class="item-msg">{{item.message}}</p>
 		</div>
   </div>
 	</div>
@@ -53,6 +57,7 @@ import firebase from '~/plugins/firebase'
 				user: null,
 				message: null,
 				email: null,
+				status: false,
 			}
 		},
 		methods: {
@@ -65,34 +70,49 @@ import firebase from '~/plugins/firebase'
           this.$router.replace('/')
         })
     	},
-		async insertMessage() {
-      const sendData = {
-        message: this.message,
-        user: this.user
-      };
-      await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
-			this.$router.replace('home')
-    },
-		async getContent() {
-      const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/v1/rest/"
-      );
-      this.contents = resData.data.data;
-    },
-    async deleteContent(id) {
-      await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
-      this.getContent();
-    },
-	},
-	created() {
-  	firebase.auth().onAuthStateChanged((user) => {
-    	if (user) {
-      	this.email = user.email
-      	this.user = user.displayName
-    	}
-  	})
-  },
-};
+			async insertMessage() {
+      	const sendData = {
+        	message: this.message,
+        	user: this.user
+      	};
+      	await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
+				this.$router.push('home')
+    	},
+			async getContent() {
+      	const resData = await this.$axios.get(
+      	  "http://127.0.0.1:8000/api/v1/rest/"
+      	);
+      	this.contents = resData.data.data;
+				this.message_id = resData.id
+    	},
+    	async deleteContent(id) {
+      	await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
+      	this.getContent();
+    	},
+			certification(){
+				firebase.auth().onAuthStateChanged((user) => {
+    			if (user) {
+    	  		this.email = user.email
+    	  		this.user = user.displayName
+    			}
+  			})
+			},
+			async like() {
+      	const addLike = {
+        	message_id: item.id,
+        	user_id: '',
+      	};
+      	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
+				this.$router.push('home')
+    	},
+		},
+		created(){
+			this.certification();
+			this.getContent();
+			this.like();
+		}
+	}
+
 
 </script>
 
@@ -191,10 +211,20 @@ textarea {
   color: #fff;
 }
 .top-line img{
-	width: 20px;
-  margin: 0 8px;
+	width: 15px;
+	height: 15px;
+  margin: auto 8px;
 }
-.top-line img:nth-child(3){
+.contents-dtl img{
 	margin-left: 30px;
+	margin-top: 20px;
+}
+.top-line{
+	display: flex;
+}
+.contents-item{
+	border-bottom: solid 2px #fff;
+	border-left: solid 2px #fff;
+	padding-left: 20px;
 }
 </style>
