@@ -41,7 +41,7 @@
 					<p>count</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
-						<img src="~/assets/detail.png">
+						<img  src="~/assets/detail.png">
 					</div>
 				</div>
 				<p class="item-msg">{{item.message}}</p>
@@ -102,8 +102,8 @@ import firebase from '~/plugins/firebase'
 			},
 			async like(id) {
       	const addLike = {
-        	message_id: '4',
-        	user_id: '4',
+        	message_id: '2',
+        	user_id: '2',
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
