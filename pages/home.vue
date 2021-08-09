@@ -36,10 +36,9 @@
 				<div class="top-line">
 					<p>{{item.user}}</p>
 					<p>{{item.id}}</p>
-					<p>{{count}}</p>
 					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img  src="~/assets/heart.png" >
-					<p>count</p>
+					<p>{{count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
 						<img  src="~/assets/detail.png">
@@ -56,12 +55,12 @@ import firebase from '~/plugins/firebase'
 		data() {
 			return{
 				contents:[],
-				user: null,
-				message: null,
-				email: null,
+				user: '',
+				message: '',
+				email: '',
 				status: false,
-				user_id: null,
-				count: null,
+				user_id: '',
+				count: '',
 			}
 		},
 		methods: {
@@ -100,7 +99,7 @@ import firebase from '~/plugins/firebase'
     	  		this.user = user.displayName
 						this.user_id = user.uid
     			}
-  			})
+  			});
 			},
 			async like(id) {
       	const addLike = {
@@ -108,20 +107,22 @@ import firebase from '~/plugins/firebase'
         	user_id: this.user_id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
-				then(() => {
-					this.count = res.data.count
-					this.$router.push('home')
-				})
-    	}
+				this.$router.push('home')
+    	},
+			async getCount() {
+      	const resCount = await this.$axios.get(
+      	  "http://127.0.0.1:8000/api/v1/like/"
+      	);
+      	this.count = resCount.data.count;
+    	},
 		},
-		created(){
+		created() {
 			this.certification();
 			this.getContent();
 			this.like();
+			this.getCount();
 		}
-	}
-
-
+	};
 </script>
 
 <style scoped>
