@@ -36,6 +36,7 @@
 				<div class="top-line">
 					<p>{{item.user}}</p>
 					<p>{{item.id}}</p>
+					<p>{{count}}</p>
 					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img  src="~/assets/heart.png" >
 					<p>count</p>
@@ -60,6 +61,7 @@ import firebase from '~/plugins/firebase'
 				email: null,
 				status: false,
 				user_id: null,
+				count: null,
 			}
 		},
 		methods: {
@@ -102,12 +104,15 @@ import firebase from '~/plugins/firebase'
 			},
 			async like(id) {
       	const addLike = {
-        	message_id: '2',
-        	user_id: '2',
+        	message_id: id,
+        	user_id: this.user_id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
-				this.$router.push('home')
-    	},
+				then(() => {
+					this.count = res.data.count
+					this.$router.push('home')
+				})
+    	}
 		},
 		created(){
 			this.certification();
