@@ -8,6 +8,7 @@
     		<nav class="nav">
       		<p>{{user}}</p>
       		<p>{{email}}</p>
+          <p>{{paramsId}}</p>
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>
@@ -35,23 +36,51 @@
       <p>コメント</p>
     </div>
     <div class="comment-list">
-
+      <div class="contents-item">
+				<div class="top-line">
+					<p>{{paramsUser}}</p>
+					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
+					<img  src="~/assets/heart.png" >
+					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
+				</div>
+				<p class="item-msg">{{paramsMessage}}</p>
+		  </div>
+      <div class="comment-center">
+        <p>コメント</p>
+        <div v-for="item in data" :key="item.id"></div>
+        <p>{{item}}</p>
+      </div>
+      <div class="comment-item">
+        <p>a</p>
+        <p>x</p>
+      </div>
     </div>
+    <validation-observer ref="obs" v-slot="ObserverProps">
+      <div class="comment-form">
+        <validation-provider v-slot="{ errors }" rules="required">
+          <textarea name="comment" id="comment" v-model="comment" cols="120" rows="2" class="comment-box" required></textarea>
+          <div class="error">{{ errors[0] }}</div>
+          <button @click="insertComment" type="submit" class="btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">コメント</button>
+        </validation-provider>
+      </div>
+    </validation-observer>
 
 
   </div>
 </div>
-  
 </template>
 <script>
 import firebase from '~/plugins/firebase'
 	export default {
 		data() {
 			return{
-				contents:[],
+        comment: null,
 				user: null,
 				message: null,
 				email: null,
+        paramsUser: null,
+        paramsMessage: null,
+        paramsId: null,
 			}
 		},
 		methods: {
@@ -64,57 +93,78 @@ import firebase from '~/plugins/firebase'
           this.$router.replace('/')
         })
     	},
-			detail(){
-				this.$router.replace('detail')
-			},
+			async like(id) {
+      	const addLike = {
+        	message_id: id,
+        	user_id: this.user_id,
+      	};
+      	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
+				this.$router.push('home')
+    	},
 		async insertMessage() {
       const sendData = {
         message: this.message,
         user: this.user
       };
       await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
-			this.$router.replace('home')
-    },
-		async getContent() {
-      const resData = await this.$axios.get(
-        "http://127.0.0.1:8000/api/v1/rest/"
-      );
-      this.contents = resData.data.data;
+			this.$router.replace('/home')
     },
     async deleteContent(id) {
       await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
-      this.getContent();
+      this.$router.replace('/home')
     },
+    certification(){
+			firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          this.email = user.email
+          this.user = user.displayName
+					this.user_id = user.uid
+        }
+      });
+		},
+    setParams(){
+      this.paramsUser = this.$route.params.user || ''
+      this.paramsMessage = this.$route.params.message || ''
+      this.paramsId = this.$route.params.id || ''
+    },
+    async insertComment() {
+      const sendComment = {
+        comment: this.comment,
+        user: this.user,
+        message_id: this.paramsId
+      };
+      await this.$axios.post("http://127.0.0.1:8000/api/v1/comment", sendComment);
+			this.$router.go({ name: 'detail-user-message-_id' })
+    },
+    async getContent(paramsId) {
+      const resComment = await this.$axios.get(
+      	"http://127.0.0.1:8000/api/v1/search/" + paramsId
+      );
+      this.data = resComment
+    	},
 	},
 	created() {
-  	firebase.auth().onAuthStateChanged((user) => {
-    	if (user) {
-      	this.email = user.email
-      	this.user = user.displayName
-    	}
-  	})
+  	this.certification();
+    this.setParams();
+
   },
 };
 
 </script>
 <style scoped>
-.side-list{
-  width: 25%;
-  background-color: rgb(23, 35, 49);
-}
 .comment{
-  width: 100%;
-  background-color: rgb(23, 35, 49);
+  margin-left: 3%;
+	width: 100%;
+	height: 100vh;
 }
 .detail{
   color: #fff;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
+  background-color: rgb(23, 35, 49);
 }
-.contents-list{
-  padding-left: 30px;
-}
+
 li{
   list-style: none;
 }
@@ -166,7 +216,7 @@ textarea {
   background-color: rgb(96, 26, 224);
   padding: 5px 8px;
   border-radius: 30px;
-  margin-left: 150px;
+  float: right;
   width: 100px;
 }
 .share{
@@ -181,6 +231,9 @@ textarea {
   border-bottom: solid 1px #fff;
   margin-top: 0;
   margin-bottom: 0;
+  font-weight: bold;
+  font-size: 20px;
+  padding-left: 10px;
 }
 .comment-ttl p{
   margin-top: 0;
@@ -188,8 +241,38 @@ textarea {
 }
 .comment-list{
   border-left: solid 1px #fff;
-  border-bottom: solid 1px #fff;
   margin-top: 0;
   margin-bottom: 0;
+}
+.top-line{
+	display: flex;
+}
+.contents-item{
+	border-bottom: solid 2px #fff;
+
+	padding-left: 20px;
+}
+.contents-item p{
+  font-weight: bold;
+}
+.top-line img{
+	width: 15px;
+	height: 15px;
+  margin: auto 8px;
+  color: rgb(138, 26, 26);
+}
+.comment-box{
+  margin-top: 20px;
+  width: 95%;
+  height: 30px;
+  border: solid 1px #fff;
+}
+.comment-center{
+  border-bottom: solid 1px #fff;
+  text-align: center;
+}
+.comment-item{
+  border-bottom: solid 1px #fff;
+  padding-left: 20px;
 }
 </style>

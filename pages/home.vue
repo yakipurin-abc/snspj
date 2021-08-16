@@ -36,12 +36,14 @@
 				<div class="top-line">
 					<p>{{item.user}}</p>
 					<p>{{item.id}}</p>
-					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
-					<img  src="~/assets/heart.png" >
+					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
 					<p>{{count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
-						<img  src="~/assets/detail.png">
+						<NuxtLink :to="{ name: 'detail-user-message-_id', params:{user: item.user, message: item.message, id: item.id}}" >
+							<img  src="~/assets/detail.png">
+						</NuxtLink>
 					</div>
 				</div>
 				<p class="item-msg">{{item.message}}</p>
@@ -79,7 +81,7 @@ import firebase from '~/plugins/firebase'
         	user: this.user
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
-				this.$router.push('home')
+				this.getContent();
     	},
 			async getContent() {
       	const resData = await this.$axios.get(
@@ -108,18 +110,27 @@ import firebase from '~/plugins/firebase'
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
+				this.status = true
+    	},
+			async unlike(id) {
+      	const deleteLike = {
+        	message_id: id,
+        	user_id: this.user_id,
+      	};
+      	await this.$axios.delete("http://127.0.0.1:8000/api/v1/like" + deleteLike);
+				this.$router.push('home')
+				this.status = false
     	},
 			async getCount() {
       	const resCount = await this.$axios.get(
-      	  "http://127.0.0.1:8000/api/v1/like/"
+      	  "http://127.0.0.1:8000/count"
       	);
-      	this.count = resCount.data.count;
+      	this.count = resCount;
     	},
 		},
 		created() {
 			this.certification();
 			this.getContent();
-			this.like();
 			this.getCount();
 		}
 	};
@@ -131,7 +142,7 @@ import firebase from '~/plugins/firebase'
 	display: flex;
 	color: #fff;
 	width: 100%;
-	height: 100vh;
+	height: 100%;
 }
 .contents-list img{
 	width: 2%;
@@ -140,7 +151,7 @@ import firebase from '~/plugins/firebase'
 .contents{
 	margin-left: 3%;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 }
 .contents-ttl{
 	padding: 10px;
