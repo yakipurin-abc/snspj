@@ -105,17 +105,17 @@ import firebase from '~/plugins/firebase'
 			},
 			async like(id) {
       	const addLike = {
-        	message_id: id,
         	user_id: this.user_id,
+					rest_id: id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
 				this.status = true
     	},
 			async unlike(id) {
-      	const deleteLike = {
-        	message_id: id,
-        	user_id: this.user_id,
+				const deleteLike = {
+					user_id: this.user_id,
+					rest_id: id,
       	};
       	await this.$axios.delete("http://127.0.0.1:8000/api/v1/like" + deleteLike);
 				this.$router.push('home')
@@ -123,9 +123,9 @@ import firebase from '~/plugins/firebase'
     	},
 			async getCount() {
       	const resCount = await this.$axios.get(
-      	  "http://127.0.0.1:8000/count"
+      	  "http://127.0.0.1:8000/api/v1/like"
       	);
-      	this.count = resCount;
+      	this.count = resCount.count;
     	},
 		},
 		created() {
