@@ -6,9 +6,6 @@
       		<img src="~/assets/logo.png">
     		</div>
     		<nav class="nav">
-      		<p>{{user}}</p>
-      		<p>{{email}}</p>
-					<p>{{user_id}}</p>
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>
@@ -36,7 +33,7 @@
 				<div class="top-line">
 					<p>{{item.user}}</p>
 					<p>{{item.id}}</p>
-					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id, item.user)">
 					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
 					<p>{{count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
@@ -103,9 +100,9 @@ import firebase from '~/plugins/firebase'
     			}
   			});
 			},
-			async like(id) {
+			async like(id, user) {
       	const addLike = {
-        	user_id: this.user_id,
+        	user: user,
 					rest_id: id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
@@ -125,7 +122,7 @@ import firebase from '~/plugins/firebase'
       	const resCount = await this.$axios.get(
       	  "http://127.0.0.1:8000/api/v1/like"
       	);
-      	this.count = resCount.count;
+      	this.count = resCount.data.count;
     	},
 		},
 		created() {
@@ -147,7 +144,9 @@ import firebase from '~/plugins/firebase'
 .contents-list img{
 	width: 2%;
 }
-
+.side-list{
+  width: 20%;
+}
 .contents{
 	margin-left: 3%;
 	width: 100%;
@@ -179,9 +178,9 @@ table{
   display: block;
 }
 .logo img{
-  width: 100px;
-  padding-top: 2%;
-  padding-left: 1%;
+  width: 50%;
+  margin-left: 5%;
+  margin-top: 5%;
 }
 .logout{
   cursor: pointer;
@@ -197,6 +196,7 @@ textarea {
   resize: none;
   border-radius: 5px;
   color: #fff;
+	width: 100%;
 }
 .home-btn::before{
   content: "";
@@ -221,7 +221,7 @@ textarea {
   background-color: rgb(96, 26, 224);
   padding: 5px 8px;
   border-radius: 30px;
-  margin-left: 150px;
+  float: right;
   width: 100px;
 }
 .share{

@@ -6,9 +6,7 @@
       		<img src="~/assets/logo.png">
     		</div>
     		<nav class="nav">
-      		<p>{{user}}</p>
-      		<p>{{email}}</p>
-          <p>{{paramsId}}</p>
+
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>
@@ -44,15 +42,15 @@
 					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
 				</div>
 				<p class="item-msg">{{paramsMessage}}</p>
+        <p>{{paramsId}}</p>
 		  </div>
       <div class="comment-center">
         <p>コメント</p>
-        <div v-for="item in data" :key="item.id"></div>
-        <p>{{item}}</p>
+        
       </div>
       <div class="comment-item">
-        <p>a</p>
-        <p>x</p>
+        <div v-for="item in data" :key="item.id"></div>
+        <p>{{item}}</p>
       </div>
     </div>
     <validation-observer ref="obs" v-slot="ObserverProps">
@@ -64,8 +62,6 @@
         </validation-provider>
       </div>
     </validation-observer>
-
-
   </div>
 </div>
 </template>
@@ -174,9 +170,12 @@ li{
   display: block;
 }
 .logo img{
-  width: 100px;
-  padding-top: 2%;
-  padding-left: 1%;
+  width: 50%;
+  margin-left: 5%;
+  margin-top: 5%;
+}
+.side-list{
+  width: 20%;
 }
 .logout{
   cursor: pointer;
@@ -192,6 +191,7 @@ textarea {
   resize: none;
   border-radius: 5px;
   color: #fff;
+  width: 100%;
 }
 .home-btn::before{
   content: "";
@@ -220,7 +220,7 @@ textarea {
   width: 100px;
 }
 .share{
-  margin-left: 30px;
+  margin-left: 10%;
 }
 .share p {
   color: #fff;
