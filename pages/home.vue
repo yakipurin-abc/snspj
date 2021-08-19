@@ -7,6 +7,8 @@
     		</div>
     		<nav class="nav">
 					<p>{{user_id}}</p>
+					<p>{{user}}</p>
+					<p>{{email}}</p>
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>

@@ -57,15 +57,6 @@ export default {
         })
         this.$axios.post("http://localhost:8000/api/v1/user", sendData)
         this.$router.push('login')
-
-        this.axios.get('http://localhost:8000/api/v1/user')
-        .then((response)=> {
-          this.items = response.data.items
-          console.log(this.items)
-        })
-        .catch(error => {
-          console.log(error)
-        })
       });
     }
   },
