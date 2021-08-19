@@ -6,6 +6,7 @@
       		<img src="~/assets/logo.png">
     		</div>
     		<nav class="nav">
+					<p>{{user_id}}</p>
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>

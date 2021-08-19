@@ -45,31 +45,30 @@ export default {
       firebase
       .auth()
       .createUserWithEmailAndPassword(this.email, this.password)
-      .then((date)=>{
-        console.log(date);
-        date.user.updateProfile({
-        displayName: this.name
-      })
-    })
-    this.$router.push('login')
-    .catch((error) => {
-          switch (error.code) {
-            case 'auth/invalid-email':
-              alert('メールアドレスの形式が違います。')
-              break
-            case 'auth/email-already-in-use':
-              alert('このメールアドレスはすでに使われています。')
-              break
-            case 'auth/weak-password':
-              alert('パスワードは6文字以上で入力してください。')
-              break
-            default:
-              alert('エラーが起きました。しばらくしてから再度お試しください。')
-              break
-          }
-    })
-}
-  }
+      .then((data)=>{
+        console.log(data);
+        const sendData ={
+          id: data.user.uid,
+          name: this.name
+        }
+        console.log(sendData);
+        data.user.updateProfile({
+        displayName: this.name,
+        })
+        this.$axios.post("http://localhost:8000/api/v1/user", sendData)
+        this.$router.push('login')
+
+        this.axios.get('http://localhost:8000/api/v1/user')
+        .then((response)=> {
+          this.items = response.data.items
+          console.log(this.items)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      });
+    }
+  },
 }
 </script>
 
