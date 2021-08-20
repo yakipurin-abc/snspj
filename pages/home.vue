@@ -35,10 +35,9 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<p>{{item.id}}</p>
-					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id, item.user)">
+					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
-					<p>{{count}}</p>
+					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
 						<NuxtLink :to="{ name: 'detail-user-message-_id', params:{user: item.user, message: item.message, id: item.id}}" >
@@ -78,8 +77,10 @@ import firebase from '~/plugins/firebase'
 			async insertMessage() {
       	const sendData = {
         	message: this.message,
-        	user: this.user
+        	user_id: this.user_id,
+					user: this.user
       	};
+				console.log(this.user)
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
 				this.getContent();
     	},
@@ -88,7 +89,8 @@ import firebase from '~/plugins/firebase'
       	  "http://127.0.0.1:8000/api/v1/rest/"
       	);
       	this.contents = resData.data.data;
-				this.message_id = resData.id
+				this.count = resData.data.like;
+				this.message_id = resData.id;
     	},
     	async deleteContent(id) {
       	await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
@@ -103,9 +105,9 @@ import firebase from '~/plugins/firebase'
     			}
   			});
 			},
-			async like(id, user) {
+			async like(id) {
       	const addLike = {
-        	user: user,
+        	user_id: this.user_id,
 					rest_id: id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
