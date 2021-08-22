@@ -118,12 +118,11 @@ import firebase from '~/plugins/firebase'
 				this.getContent();
     	},
 			async unlike(id) {
-				const LikeData ={
-					user_id: this.user_id,
-					rest_id: id,
-				}
-				console.log(LikeData);
-      	await this.$axios.delete("http://127.0.0.1:8000/api/v1/like", LikeData);
+				await this.$axios.request({
+  				method: 'delete',
+  				url: 'http://127.0.0.1:8000/api/v1/like/{like}',
+  				data: {user_id: this.user_id,  rest_id: id},
+				});
 				this.getContent();
     	},
 			async getCount() {

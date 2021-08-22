@@ -38,7 +38,8 @@
 				<div class="top-line">
 					<p>{{paramsUser}}</p>
 					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
-					<img  src="~/assets/heart.png" >
+					<img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
+          
 					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
 				</div>
 				<p class="item-msg">{{paramsMessage}}</p>
@@ -91,11 +92,20 @@ import firebase from '~/plugins/firebase'
     	},
 			async like(id) {
       	const addLike = {
-        	message_id: id,
         	user_id: this.user_id,
+					rest_id: id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
+				this.getContent();
+    	},
+			async unlike(id) {
+				await this.$axios.request({
+  				method: 'delete',
+  				url: 'http://127.0.0.1:8000/api/v1/like/{like}',
+  				data: {user_id: this.user_id,  rest_id: id},
+				});
+				this.getContent();
     	},
 		async insertMessage() {
       const sendData = {
