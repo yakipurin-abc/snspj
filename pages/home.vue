@@ -6,9 +6,7 @@
       		<img src="~/assets/logo.png">
     		</div>
     		<nav class="nav">
-					<p>{{user_id}}</p>
-					<p>{{user}}</p>
-					<p>{{email}}</p>
+
       		<ul class="menu-group">
         		<li class="menu-item">
           		<NuxtLink to="/home" class="home-btn">ホーム</NuxtLink>
@@ -35,8 +33,9 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img v-if='status == false' src="~/assets/heart.png"  @click.prevent="like(item.id)">
-					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
+					<p>{{item.id}}</p>
+					<img src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img  src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
@@ -89,7 +88,6 @@ import firebase from '~/plugins/firebase'
       	  "http://127.0.0.1:8000/api/v1/rest/"
       	);
       	this.contents = resData.data.data;
-				this.count = resData.data.like;
 				this.message_id = resData.id;
     	},
     	async deleteContent(id) {
@@ -105,6 +103,11 @@ import firebase from '~/plugins/firebase'
     			}
   			});
 			},
+
+			async like_check(id){
+
+			},
+
 			async like(id) {
       	const addLike = {
         	user_id: this.user_id,
@@ -112,16 +115,16 @@ import firebase from '~/plugins/firebase'
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
-				this.status = true
+				this.getContent();
     	},
 			async unlike(id) {
-				const deleteLike = {
+				const LikeData ={
 					user_id: this.user_id,
 					rest_id: id,
-      	};
-      	await this.$axios.delete("http://127.0.0.1:8000/api/v1/like" + deleteLike);
-				this.$router.push('home')
-				this.status = false
+				}
+				console.log(LikeData);
+      	await this.$axios.delete("http://127.0.0.1:8000/api/v1/like", LikeData);
+				this.getContent();
     	},
 			async getCount() {
       	const resCount = await this.$axios.get(
