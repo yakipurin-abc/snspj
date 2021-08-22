@@ -36,13 +36,11 @@
     <div class="comment-list">
       <div class="contents-item">
 				<div class="top-line">
-					<p>{{paramsUser}}</p>
 					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
 					<img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
           
 					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
 				</div>
-				<p class="item-msg">{{paramsMessage}}</p>
         <p>{{paramsId}}</p>
 		  </div>
       <div class="comment-center">
@@ -50,8 +48,7 @@
         
       </div>
       <div class="comment-item">
-        <div v-for="item in data" :key="item.id"></div>
-        <p>{{item}}</p>
+
       </div>
     </div>
     <validation-observer ref="obs" v-slot="ObserverProps">
@@ -71,13 +68,11 @@ import firebase from '~/plugins/firebase'
 	export default {
 		data() {
 			return{
-        comment: null,
-				user: null,
-				message: null,
-				email: null,
-        paramsUser: null,
-        paramsMessage: null,
-        paramsId: null,
+        comment: '',
+				user: '',
+				message: '',
+				email: '',
+        paramsId: '',
 			}
 		},
 		methods: {
@@ -129,8 +124,6 @@ import firebase from '~/plugins/firebase'
       });
 		},
     setParams(){
-      this.paramsUser = this.$route.params.user || ''
-      this.paramsMessage = this.$route.params.message || ''
       this.paramsId = this.$route.params.id || ''
     },
     async insertComment() {
@@ -142,17 +135,19 @@ import firebase from '~/plugins/firebase'
       await this.$axios.post("http://127.0.0.1:8000/api/v1/comment", sendComment);
 			this.$router.go({ name: 'detail-user-message-_id' })
     },
-    async getContent(paramsId) {
-      const resComment = await this.$axios.get(
-      	"http://127.0.0.1:8000/api/v1/search/" + paramsId
-      );
-      this.data = resComment
-    	},
+    async getContent() {
+      const resData = await this.$axios.request({
+  			method: 'get',
+  			url: 'http://127.0.0.1:8000/api/v1/rest/{comment}',
+  			data: {id: this.paramsId},
+			});
+      this.contents = resData.data.data;
+    }
 	},
 	created() {
   	this.certification();
     this.setParams();
-
+    this.getcomment();
   },
 };
 
