@@ -36,12 +36,17 @@
     <div class="comment-list">
       <div class="contents-item">
 				<div class="top-line">
+        <div v-for="item in contents" :key="item.id">
+          <p>{{item.user}}</p>
+          <p>{{item.message}}</p>
+          <p>{{paramsId}}</p>
+        </div>
 					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
 					<img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
           
 					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
 				</div>
-        <p>{{paramsId}}</p>
+ 
 		  </div>
       <div class="comment-center">
         <p>コメント</p>
@@ -73,7 +78,9 @@ import firebase from '~/plugins/firebase'
 				message: '',
 				email: '',
         paramsId: '',
-			}
+      	contents:[],
+
+			};
 		},
 		methods: {
     	logout() {
@@ -132,23 +139,28 @@ import firebase from '~/plugins/firebase'
         user: this.user,
         message_id: this.paramsId
       };
+      console.log(this.paramsId);
+      console.log("パラムスアイディー");
+
       await this.$axios.post("http://127.0.0.1:8000/api/v1/comment", sendComment);
 			this.$router.go({ name: 'detail-user-message-_id' })
     },
     async getContent() {
       const resData = await this.$axios.request({
   			method: 'get',
-  			url: 'http://127.0.0.1:8000/api/v1/comment/' + this.paramsId,
+  			url: 'http://127.0.0.1:8000/api/v1/rest/' + this.paramsId,
   			data: {id: this.paramsId},
 			});
       this.contents = resData.data.data;
       console.log(this.contents);
+      console.log("aaaaa");
     }
 	},
 	created() {
   	this.certification();
     this.setParams();
     this.getContent();
+    this.insertComment();
   },
 };
 
@@ -282,3 +294,4 @@ textarea {
   padding-left: 20px;
 }
 </style>
+
