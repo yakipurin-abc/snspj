@@ -36,7 +36,6 @@
     <div class="comment-list">
       <div class="contents-item">
 				<div class="top-line">
-
 					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
 					<img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
           
@@ -139,7 +138,7 @@ import firebase from '~/plugins/firebase'
     async getContent() {
       const resData = await this.$axios.request({
   			method: 'get',
-  			url: 'http://127.0.0.1:8000/api/v1/rest/{this.paarmsId}',
+  			url: 'http://127.0.0.1:8000/api/v1/comment/' + this.paramsId,
   			data: {id: this.paramsId},
 			});
       this.contents = resData.data.data;
