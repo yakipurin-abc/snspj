@@ -38,7 +38,7 @@
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
-						<NuxtLink :to="{ name: 'detail_id', params:{id: item.id}}" >
+						<NuxtLink :to="{ name: 'detail-id', params:{id: item.id}}" >
 							<img  src="~/assets/detail.png">
 						</NuxtLink>
 					</div>
