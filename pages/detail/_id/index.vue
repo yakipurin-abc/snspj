@@ -35,30 +35,29 @@
     </div>
     <div class="comment-list">
       <div class="contents-item">
-				<div class="top-line">
         <div v-for="item in contents" :key="item.id">
-          <p>{{item.user}}</p>
+				  <div class="top-line">
+            <p>{{item.user}}</p>
+            <img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
+					  <img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
+            <p>{{item.count}}</p>
+					  <img @click="deleteContent(paramsId)" src="~/assets/cross.png">
+          </div>
           <p>{{item.message}}</p>
-          <p>{{paramsId}}</p>
-        </div>
-					<img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
-					<img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
-          
-					<img @click="deleteContent(paramsId)" src="~/assets/cross.png">
+          <p>確認用　投稿id: {{paramsId}}</p>
 				</div>
- 
 		  </div>
       <div class="comment-center">
         <p>コメント</p>
-        
       </div>
-      <div class="comment-item">
-
-      </div>
+        <div class="comment-item" v-for="content in comments" :key="content.id">
+          <p>{{content.user}}</p>
+          <p>{{content.comment}}</p>
+        </div>
     </div>
     <validation-observer ref="obs" v-slot="ObserverProps">
       <div class="comment-form">
-        <validation-provider v-slot="{ errors }" rules="required">
+        <validation-provider v-slot="{ errors }" rules="required|max:120">
           <textarea name="comment" id="comment" v-model="comment" cols="120" rows="2" class="comment-box" required></textarea>
           <div class="error">{{ errors[0] }}</div>
           <button @click="insertComment" type="submit" class="btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">コメント</button>
@@ -79,6 +78,7 @@ import firebase from '~/plugins/firebase'
 				email: '',
         paramsId: '',
       	contents:[],
+        comments:[],
 
 			};
 		},
@@ -98,7 +98,6 @@ import firebase from '~/plugins/firebase'
 					rest_id: id,
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
-				this.$router.push('home')
 				this.getContent();
     	},
 			async unlike(id) {
@@ -143,7 +142,7 @@ import firebase from '~/plugins/firebase'
       console.log("パラムスアイディー");
 
       await this.$axios.post("http://127.0.0.1:8000/api/v1/comment", sendComment);
-			this.$router.go({ name: 'detail-user-message-_id' })
+      this.getComments()
     },
     async getContent() {
       const resData = await this.$axios.request({
@@ -153,7 +152,18 @@ import firebase from '~/plugins/firebase'
 			});
       this.contents = resData.data.data;
       console.log(this.contents);
-      console.log("aaaaa");
+    },
+    async getComments() {
+      const resComments = await this.$axios.request({
+  			method: 'get',
+  			url: 'http://127.0.0.1:8000/api/v1/comment/' + this.paramsId,
+  			data: {message_id: this.paramsId},
+			});
+      this.comments = resComments.data.comments;
+      console.log(this.comments);
+      console.log('ゲットコメント');
+      console.log(this.paramsId);
+      console.log("パラムスアイディー");
     }
 	},
 	created() {
@@ -161,6 +171,7 @@ import firebase from '~/plugins/firebase'
     this.setParams();
     this.getContent();
     this.insertComment();
+    this.getComments()
   },
 };
 
@@ -169,7 +180,7 @@ import firebase from '~/plugins/firebase'
 .comment{
   margin-left: 3%;
 	width: 100%;
-	height: 100vh;
+	height: 100%;
 }
 .detail{
   color: #fff;

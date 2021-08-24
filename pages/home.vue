@@ -33,7 +33,6 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<p>{{item.id}}</p>
 					<img src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img  src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
 					<p>{{item.count}}</p>
@@ -105,9 +104,20 @@ import firebase from '~/plugins/firebase'
 			},
 
 			async like_check(id){
-
+				const resLikeInfo = await this.$axios.request({
+  			method: 'get',
+  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id + id,
+  			data: {user_id: this.user_id, id: id},
+				});
+				console.log(resLikeInfo);
+				console.log('ライクインフォ');
+				this.likeCount = resLikeInfo.data.count
+				if (this.likeCount == 0){
+					this.state == true
+				} else {
+					this.state == false
+				}
 			},
-
 			async like(id) {
       	const addLike = {
         	user_id: this.user_id,
@@ -116,6 +126,7 @@ import firebase from '~/plugins/firebase'
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
 				this.getContent();
+			  this.like_check(id)
     	},
 			async unlike(id) {
 				await this.$axios.request({
@@ -124,6 +135,7 @@ import firebase from '~/plugins/firebase'
   				data: {user_id: this.user_id,  rest_id: id},
 				});
 				this.getContent();
+				this.like_check(id)
     	},
 			async getCount() {
       	const resCount = await this.$axios.get(
@@ -131,6 +143,7 @@ import firebase from '~/plugins/firebase'
       	);
       	this.count = resCount.data.count;
     	},
+
 		},
 		created() {
 			this.certification();
