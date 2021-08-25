@@ -57,10 +57,10 @@ import firebase from '~/plugins/firebase'
 				user: '',
 				message: '',
 				email: '',
-				status: false,
+				status: '',
 				user_id: '',
 				count: '',
-				likeStatus: '',
+				likeStatus: [],
 			}
 		},
 		methods: {
