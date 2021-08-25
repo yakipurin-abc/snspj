@@ -33,8 +33,8 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img v-if="like_check(id)" src="~/assets/heart.png"  @click.prevent="like(item.id)">
-					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" >
+					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img  src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
@@ -60,6 +60,7 @@ import firebase from '~/plugins/firebase'
 				status: false,
 				user_id: '',
 				count: '',
+				likeStatus: '',
 			}
 		},
 		methods: {
@@ -88,6 +89,7 @@ import firebase from '~/plugins/firebase'
       	);
       	this.contents = resData.data.data;
 				this.message_id = resData.id;
+				this.like_check();
     	},
     	async deleteContent(id) {
       	await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
@@ -112,8 +114,9 @@ import firebase from '~/plugins/firebase'
 				console.log(resLikeInfo);
 				console.log('ライクインフォ');
 				this.likeStatus = resLikeInfo.data.data
-				console.log(likeStatus);
+				console.log(this.likeStatus);
 				console.log("ライクステータス");
+				console.log(this.likeStatus.isLike);
 			},
 			async like(id) {
       	const addLike = {
@@ -261,5 +264,9 @@ textarea {
 	border-bottom: solid 2px #fff;
 	border-left: solid 2px #fff;
 	padding-left: 20px;
+}
+
+.unlike-img{
+	filter: invert(70%) sepia(50%) saturate(6000%) hue-rotate(290deg) brightness(60%) contrast(112%);
 }
 </style>
