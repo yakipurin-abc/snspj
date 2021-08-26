@@ -53,7 +53,6 @@ import firebase from '~/plugins/firebase'
 	export default {
 		data() {
 			return{
-				contents:[],
 				user: '',
 				message: '',
 				email: '',
@@ -81,22 +80,11 @@ import firebase from '~/plugins/firebase'
       	};
 				console.log(this.user)
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
-				this.getContent();
-    	},
-			async getContent() {
-      	const resData = await this.$axios.get(
-      	  "http://127.0.0.1:8000/api/v1/rest/"
-      	);
-				console.log(resData);
-				console.log('レスデータ');
-      	this.contents = resData.data.data;
-				console.log(this.contents);
-				console.log('コンテンツ');
-				this.message_id = resData.id;
+				this.like_check();
     	},
     	async deleteContent(id) {
       	await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
-      	this.getContent();
+      	this.like_check();
     	},
 			certification(){
 				firebase.auth().onAuthStateChanged((user) => {
@@ -130,7 +118,7 @@ import firebase from '~/plugins/firebase'
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.$router.push('home')
-				this.getContent();
+				this.like_check();
     	},
 			async unlike(id) {
 				await this.$axios.request({
@@ -138,7 +126,7 @@ import firebase from '~/plugins/firebase'
   				url: 'http://127.0.0.1:8000/api/v1/like/{like}',
   				data: {user_id: this.user_id,  rest_id: id},
 				});
-				this.getContent();
+				this.like_check();
     	},
 			async getCount() {
       	const resCount = await this.$axios.get(
@@ -149,7 +137,7 @@ import firebase from '~/plugins/firebase'
 		},
 		created() {
 			this.certification();
-			this.getContent();
+
 			this.getCount();
 		}
 	};
