@@ -138,6 +138,7 @@ import firebase from '~/plugins/firebase'
         user: this.user,
         message_id: this.paramsId
       };
+      console.log(this.sendComment);
       console.log(this.paramsId);
       console.log("パラムスアイディー");
 
@@ -164,7 +165,22 @@ import firebase from '~/plugins/firebase'
       console.log('ゲットコメント');
       console.log(this.paramsId);
       console.log("パラムスアイディー");
-    }
+    },
+
+    async like_check(){
+				const resLikeInfo = await this.$axios.request({
+  			method: 'get',
+  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id,
+  			params: {user_id: this.user_id},
+				});
+				console.log(resLikeInfo);
+				console.log('ライクインフォ');
+				this.likeStatus = resLikeInfo.data.data
+				console.log(this.likeStatus);
+				console.log("ライクステータス");
+				console.log(this.like)
+				console.log("ライク");
+			},
 	},
 	created() {
   	this.certification();

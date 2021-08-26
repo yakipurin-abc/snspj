@@ -33,7 +33,7 @@
 			<div class="contents-item" v-for="item in likeStatus" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img v-if="likeStatus.isLike == false" src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img v-if="item.isLike == false" src="~/assets/heart.png"  @click.prevent="like(item.id)">
 					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
