@@ -30,11 +30,11 @@
 		</div>
 		<div class="contents">
 			<h2 class="contents-ttl">ホーム</h2>
-			<div class="contents-item" v-for="item in contents" :key="item.id">
+			<div class="contents-item" v-for="item in likeStatus" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
-					<img  src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
+					<img v-if="likeStatus.isLike == false" src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
@@ -60,6 +60,7 @@ import firebase from '~/plugins/firebase'
 				status: '',
 				user_id: '',
 				count: '',
+				likeStatus: [],
 			}
 		},
 		methods: {
@@ -92,7 +93,6 @@ import firebase from '~/plugins/firebase'
 				console.log(this.contents);
 				console.log('コンテンツ');
 				this.message_id = resData.id;
-				this.like_check();
     	},
     	async deleteContent(id) {
       	await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
@@ -105,6 +105,7 @@ import firebase from '~/plugins/firebase'
     	  		this.user = user.displayName
 						this.user_id = user.uid
     			}
+					this.like_check();
   			});
 			},
 
