@@ -33,8 +33,8 @@
 			<div class="contents-item" v-for="item in contents" :key="item.id">
 				<div class="top-line">
 					<p>{{item.user}}</p>
-					<img v-if="likeStatus.isLike == false" src="~/assets/heart.png"  @click.prevent="like(item.id)">
-					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
+					<img  src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img  src="~/assets/heart.png" @click.prevent="unlike(item.id)"  class="unlike-img">
 					<p>{{item.count}}</p>
 					<img @click="deleteContent(item.id)" src="~/assets/cross.png">
 					<div  class="contents-dtl">
@@ -119,6 +119,8 @@ import firebase from '~/plugins/firebase'
 				this.likeStatus = resLikeInfo.data.data
 				console.log(this.likeStatus);
 				console.log("ライクステータス");
+				console.log(this.like)
+				console.log("ライク");
 			},
 			async like(id) {
       	const addLike = {
@@ -148,7 +150,6 @@ import firebase from '~/plugins/firebase'
 			this.certification();
 			this.getContent();
 			this.getCount();
-			this.like_check();
 		}
 	};
 </script>
