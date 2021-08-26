@@ -111,10 +111,11 @@ import firebase from '~/plugins/firebase'
 		async insertMessage() {
       const sendData = {
         message: this.message,
-        user: this.user
+        user: this.user,
+        user_id: this.user_id,
       };
       await this.$axios.post("http://127.0.0.1:8000/api/v1/rest", sendData);
-			this.$router.replace('/home')
+      this.getContent();
     },
     async deleteContent(id) {
       await this.$axios.delete("http://127.0.0.1:8000/api/v1/rest/" + id);
@@ -158,7 +159,7 @@ import firebase from '~/plugins/firebase'
       const resComments = await this.$axios.request({
   			method: 'get',
   			url: 'http://127.0.0.1:8000/api/v1/comment/' + this.paramsId,
-  			data: {message_id: this.paramsId},
+  			params: {message_id: this.paramsId},
 			});
       this.comments = resComments.data.comments;
       console.log(this.comments);

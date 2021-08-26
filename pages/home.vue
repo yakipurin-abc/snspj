@@ -149,13 +149,14 @@ import firebase from '~/plugins/firebase'
 	display: flex;
 	color: #fff;
 	width: 100%;
-	height: 100%;
+	height: 100vh;
 }
 .contents-list img{
 	width: 2%;
 }
 .side-list{
   width: 20%;
+	height: 100vh;
 }
 .contents{
 	margin-left: 3%;
