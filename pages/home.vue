@@ -61,6 +61,7 @@ import firebase from '~/plugins/firebase'
 				user_id: '',
 				count: '',
 				likeStatus: [],
+				likeRest: [],
 			}
 		},
 		methods: {
@@ -87,7 +88,11 @@ import firebase from '~/plugins/firebase'
       	const resData = await this.$axios.get(
       	  "http://127.0.0.1:8000/api/v1/rest/"
       	);
+				console.log(resData);
+				console.log('レスデータ');
       	this.contents = resData.data.data;
+				console.log(this.contents);
+				console.log('コンテンツ');
 				this.message_id = resData.id;
 				this.like_check();
     	},
@@ -114,8 +119,11 @@ import firebase from '~/plugins/firebase'
 				console.log(resLikeInfo);
 				console.log('ライクインフォ');
 				this.likeStatus = resLikeInfo.data.data
+				this.likeRest= resLikeInfo.data.rest
 				console.log(this.likeStatus);
 				console.log("ライクステータス");
+				console.log(this.likeRest);
+				console.log("ライクレスト");
 				console.log(this.likeStatus.isLike);
 			},
 			async like(id) {
@@ -141,7 +149,6 @@ import firebase from '~/plugins/firebase'
       	);
       	this.count = resCount.data.count;
     	},
-
 		},
 		created() {
 			this.certification();
