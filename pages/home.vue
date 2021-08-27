@@ -149,7 +149,7 @@ import firebase from '~/plugins/firebase'
 	display: flex;
 	color: #fff;
 	width: 100%;
-	height: 100vh;
+
 }
 .contents-list img{
 	width: 2%;
@@ -161,7 +161,7 @@ import firebase from '~/plugins/firebase'
 .contents{
 	margin-left: 3%;
 	width: 100%;
-	height: 100vh;
+
 }
 .contents-ttl{
 	padding: 10px;
@@ -244,7 +244,11 @@ textarea {
 .top-line img{
 	width: 15px;
 	height: 15px;
-  margin: auto 8px;
+  margin: 17px 1%;
+}
+.top-line p{
+	margin-top: 17px;
+
 }
 .contents-dtl img{
 	margin-left: 30px;
@@ -260,6 +264,6 @@ textarea {
 }
 
 .unlike-img{
-	filter: invert(70%) sepia(50%) saturate(6000%) hue-rotate(290deg) brightness(60%) contrast(112%);
+	filter: invert(33%) sepia(70%) saturate(7000%) hue-rotate(310deg) brightness(60%) contrast(112%);
 }
 </style>

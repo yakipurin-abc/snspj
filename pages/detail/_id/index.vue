@@ -39,7 +39,7 @@
 				  <div class="top-line">
             <p>{{item.user}}</p>
             <img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
-					  <img  @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
+					  <img class="unlike-img" @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
             <p>{{item.count}}</p>
 					  <img @click="deleteContent(paramsId)" src="~/assets/cross.png">
           </div>
@@ -128,6 +128,7 @@ import firebase from '~/plugins/firebase'
           this.user = user.displayName
 					this.user_id = user.uid
         }
+        this.like_check();
       });
 		},
     setParams(){
@@ -139,6 +140,8 @@ import firebase from '~/plugins/firebase'
         user: this.user,
         message_id: this.paramsId
       };
+      console.log(this.user);
+      console.log("ユーザー");
       console.log(this.sendComment);
       console.log(this.paramsId);
       console.log("パラムスアイディー");
@@ -154,6 +157,7 @@ import firebase from '~/plugins/firebase'
 			});
       this.contents = resData.data.data;
       console.log(this.contents);
+      console.log('コンテンツ');
     },
     async getComments() {
       const resComments = await this.$axios.request({
@@ -169,6 +173,22 @@ import firebase from '~/plugins/firebase'
     },
 
     async like_check(){
+				const resLikeInfo = await this.$axios.request({
+  			method: 'get',
+  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id + this.paramsId,
+  			params: {user_id: this.user_id , id: this.paramsId},
+				});
+				console.log(resLikeInfo);
+				console.log('ライクインフォ');
+				this.likeStatus = resLikeInfo.data.comments
+				console.log(this.likeStatus);
+				console.log("ライクステータス");
+				console.log(this.like)
+				console.log("ライク");
+        
+			},
+
+      async like_check(){
 				const resLikeInfo = await this.$axios.request({
   			method: 'get',
   			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id,
@@ -197,7 +217,7 @@ import firebase from '~/plugins/firebase'
 .comment{
   margin-left: 3%;
 	width: 100%;
-	height: 100%;
+
 }
 .detail{
   color: #fff;
@@ -222,6 +242,7 @@ li{
 }
 .side-list{
   width: 20%;
+  height: 100vh;
 }
 .logout{
   cursor: pointer;
@@ -320,6 +341,9 @@ textarea {
 .comment-item{
   border-bottom: solid 1px #fff;
   padding-left: 20px;
+}
+.unlike-img{
+  filter: invert(33%) sepia(70%) saturate(7000%) hue-rotate(310deg) brightness(60%) contrast(112%);
 }
 </style>
 

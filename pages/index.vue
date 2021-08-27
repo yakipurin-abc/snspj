@@ -25,14 +25,15 @@
   text-align: center;
 }
 img{
-  margin-top: 10%;
-  margin-bottom: 5%;
+  padding-top: 5%;
+  margin: 0 auto;
   width: 33%;
   height: 10%;
+  text-align: center;
 
 }
 .contents-message{
-
+  margin-top: 10%;
   color: #fff;
   text-align: center;
 }
