@@ -138,7 +138,7 @@ import firebase from '~/plugins/firebase'
       const sendComment = {
         comment: this.comment,
         user: this.user,
-        message_id: this.paramsId
+        rest_id: this.paramsId
       };
       console.log(this.user);
       console.log("ユーザー");
@@ -163,7 +163,7 @@ import firebase from '~/plugins/firebase'
       const resComments = await this.$axios.request({
   			method: 'get',
   			url: 'http://127.0.0.1:8000/api/v1/comment/' + this.paramsId,
-  			params: {message_id: this.paramsId},
+  			params: {rest_id: this.paramsId},
 			});
       this.comments = resComments.data.comments;
       console.log(this.comments);
@@ -175,8 +175,8 @@ import firebase from '~/plugins/firebase'
     async like_check(){
 				const resLikeInfo = await this.$axios.request({
   			method: 'get',
-  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id + this.paramsId,
-  			params: {user_id: this.user_id , id: this.paramsId},
+  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id ,
+  			params: {user_id: this.user_id,},
 				});
 				console.log(resLikeInfo);
 				console.log('ライクインフォ');
@@ -188,26 +188,12 @@ import firebase from '~/plugins/firebase'
         
 			},
 
-      async like_check(){
-				const resLikeInfo = await this.$axios.request({
-  			method: 'get',
-  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id,
-  			params: {user_id: this.user_id},
-				});
-				console.log(resLikeInfo);
-				console.log('ライクインフォ');
-				this.likeStatus = resLikeInfo.data.data
-				console.log(this.likeStatus);
-				console.log("ライクステータス");
-				console.log(this.like)
-				console.log("ライク");
-			},
 	},
 	created() {
   	this.certification();
     this.setParams();
     this.getContent();
-    this.insertComment();
+
     this.getComments()
   },
 };
