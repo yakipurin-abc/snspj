@@ -44,7 +44,7 @@
 					  <img @click="deleteContent(paramsId)" src="~/assets/cross.png">
           </div>
           <p>{{item.message}}</p>
-          <p>{{paramsId}}</p>
+
 				</div>
 		  </div>
       <div class="comment-center">
@@ -129,6 +129,7 @@ import firebase from '~/plugins/firebase'
           this.user = user.displayName
 					this.user_id = user.uid
         }
+        this.getContent();
       });
 		},
     setParams(){
@@ -152,9 +153,11 @@ import firebase from '~/plugins/firebase'
       const resData = await this.$axios.request({
   			method: 'get',
   			url: 'http://127.0.0.1:8000/api/v1/rest/' + this.paramsId,
-  			data: {id: this.paramsId},
+  			params: {id: this.paramsId, uesr_id: this.user_id},
 			});
       this.contents = resData.data.data;
+      console.log(resData);
+      console.log("レスデータ");
       console.log(this.contents);
       console.log('コンテンツ');
     },
