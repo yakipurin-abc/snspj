@@ -98,7 +98,7 @@ import firebase from '~/plugins/firebase'
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.getContent();
-        this.like_check();
+
     	},
 			async unlike(id) {
 				await this.$axios.request({
@@ -107,7 +107,7 @@ import firebase from '~/plugins/firebase'
   				data: {user_id: this.user_id,  rest_id: id},
 				});
 				this.getContent();
-        this.like_check();
+
     	},
 		async insertMessage() {
       const sendData = {
