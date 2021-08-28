@@ -38,13 +38,13 @@
         <div v-for="item in contents" :key="item.id">
 				  <div class="top-line">
             <p>{{item.user}}</p>
-            <img  src="~/assets/heart.png"  @click.prevent="like(paramsId)">
-					  <img class="unlike-img" @click.prevent="unlike(paramsId)" src="~/assets/heart.png" >
+					<img v-if="item.isLike == false" src="~/assets/heart.png"  @click.prevent="like(item.id)">
+					<img v-else src="~/assets/heart.png" @click.prevent="unlike(item.id)" class="unlike-img">
             <p>{{item.count}}</p>
 					  <img @click="deleteContent(paramsId)" src="~/assets/cross.png">
           </div>
           <p>{{item.message}}</p>
-          <p>確認用　投稿id: {{paramsId}}</p>
+          <p>{{paramsId}}</p>
 				</div>
 		  </div>
       <div class="comment-center">
@@ -79,7 +79,6 @@ import firebase from '~/plugins/firebase'
         paramsId: '',
       	contents:[],
         comments:[],
-
 			};
 		},
 		methods: {
@@ -99,6 +98,7 @@ import firebase from '~/plugins/firebase'
       	};
       	await this.$axios.post("http://127.0.0.1:8000/api/v1/like", addLike);
 				this.getContent();
+        this.like_check();
     	},
 			async unlike(id) {
 				await this.$axios.request({
@@ -107,6 +107,7 @@ import firebase from '~/plugins/firebase'
   				data: {user_id: this.user_id,  rest_id: id},
 				});
 				this.getContent();
+        this.like_check();
     	},
 		async insertMessage() {
       const sendData = {
@@ -128,7 +129,6 @@ import firebase from '~/plugins/firebase'
           this.user = user.displayName
 					this.user_id = user.uid
         }
-        this.like_check();
       });
 		},
     setParams(){
@@ -145,7 +145,6 @@ import firebase from '~/plugins/firebase'
       console.log(this.sendComment);
       console.log(this.paramsId);
       console.log("パラムスアイディー");
-
       await this.$axios.post("http://127.0.0.1:8000/api/v1/comment", sendComment);
       this.getComments()
     },
@@ -171,30 +170,12 @@ import firebase from '~/plugins/firebase'
       console.log(this.paramsId);
       console.log("パラムスアイディー");
     },
-
-    async like_check(){
-				const resLikeInfo = await this.$axios.request({
-  			method: 'get',
-  			url: 'http://127.0.0.1:8000/api/v1/like/' + this.user_id ,
-  			params: {user_id: this.user_id,},
-				});
-				console.log(resLikeInfo);
-				console.log('ライクインフォ');
-				this.likeStatus = resLikeInfo.data.comments
-				console.log(this.likeStatus);
-				console.log("ライクステータス");
-				console.log(this.like)
-				console.log("ライク");
-        
-			},
-
 	},
 	created() {
   	this.certification();
     this.setParams();
     this.getContent();
-
-    this.getComments()
+    this.getComments();
   },
 };
 
