@@ -19,7 +19,7 @@
       	<validation-observer ref="obs" v-slot="ObserverProps">
         	<div class="share">
           	<p>シェア</p>
-          	<validation-provider v-slot="{ errors }" rules="required">
+          	<validation-provider v-slot="{ errors }" rules="required|max:120">
             	<textarea name="message" id="message" v-model="message" cols="30" rows="10" class="message-box" required></textarea>
             	<div class="error">{{ errors[0] }}</div>
             	<button @click="insertMessage" type="submit" class="btn" :disabled="ObserverProps.invalid || !ObserverProps.validated">シェアする</button>
