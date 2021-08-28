@@ -153,7 +153,7 @@ import firebase from '~/plugins/firebase'
       const resData = await this.$axios.request({
   			method: 'get',
   			url: 'http://127.0.0.1:8000/api/v1/rest/' + this.paramsId,
-  			params: {id: this.paramsId, uesr_id: this.user_id},
+  			params: {id: this.paramsId, user_id: this.user_id},
 			});
       this.contents = resData.data.data;
       console.log(resData);
